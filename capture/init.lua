@@ -2,7 +2,7 @@
 -- shell, three terminals, then either stills (one per hour) or the hero
 -- loop (hour changes timed to the website's chips).
 local root = assert(os.getenv("SHADY_ROOT"))
-dofile(root .. "/examples/rice/afterglow/init.lua")
+dofile(root .. "/rices/afterglow/init.lua")
 
 local mode = assert(os.getenv("CAPTURE_MODE"))
 local out = assert(os.getenv("CAPTURE_OUT"))
@@ -26,7 +26,7 @@ end
 
 local terminals = {
     { app = "capture-htop", title = "Terminal — htop",
-      cmd = "ls -l --color=always " .. root .. "/src " .. root .. "/examples/plugins" },
+      cmd = "ls -l --color=always " .. root .. "/compositor/src " .. root .. "/plugins" },
     { app = "capture-notes", title = "Notes — README.md",
       cmd = "sed -n '/^## Highlights/,/^## Controls/p' " .. root .. "/README.md | cut -c1-110" },
     { app = "capture-shell", title = "Shell", cmd = "printf 'hello shady\\n'" },

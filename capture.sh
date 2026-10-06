@@ -5,14 +5,14 @@
 #   hero.mp4/webm/jpg  the 17.1 s website loop and its poster
 #
 # Needs a build in build/ and a GPU. Run from the repository root:
-#   nix develop -c bash examples/rice/afterglow/capture.sh
+#   nix develop -c bash rices/afterglow/capture.sh
 # grim, foot, wf-recorder, ImageMagick and ffmpeg come from nixpkgs.
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
-RICE="$ROOT/examples/rice/afterglow"
+RICE="$ROOT/rices/afterglow"
 for bin in shady shady-shell libshady-plugin-afterglow.so; do
-    [[ -e "build/$bin" ]] || { echo "capture: build/$bin is missing; run ./build.sh" >&2; exit 1; }
+    [[ -e "build/$bin" ]] || { echo "capture: build/$bin is missing; run ./tools/build.sh" >&2; exit 1; }
 done
 
 tools() { env -u LD_LIBRARY_PATH nix shell nixpkgs#wf-recorder nixpkgs#imagemagick nixpkgs#ffmpeg -c "$@"; }

@@ -14,9 +14,9 @@ that light moves through four hours with `Super+T`.
 
 ```sh
 nix develop
-./build.sh
-./examples/rice/afterglow/run.sh          # nested in a Wayland session
-./examples/rice/afterglow/run-native.sh   # directly on a VT (DRM + libinput)
+./tools/build.sh
+./rices/afterglow/run.sh          # nested in a Wayland session
+./rices/afterglow/run-native.sh   # directly on a VT (DRM + libinput)
 ```
 
 Without arguments the launchers start `shady-shell` and a terminal (`$TERMINAL`,
@@ -42,7 +42,7 @@ default `foot`). Pass `-s '<command>'` to start something else.
 
 ## What it is made of
 
-- **`afterglow` native plugin** (`examples/plugins/afterglow.c`). It renders
+- **`afterglow` native plugin** (`plugins/afterglow.c`). It renders
   `shaders/afterglow_sky.frag` in the `AFTER_BACKGROUND` render hook. Every pixel
   is a world-space view ray from the host camera, so the horizon, sun and sea stay
   fixed in the world while you orbit:
