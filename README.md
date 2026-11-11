@@ -10,17 +10,41 @@ that light moves through four hours with `Super+T`.
 
 *Golden hour · afterglow (default) · blue hour · night.*
 
-## Run
+## Use it
+
+Afterglow needs [Shady](https://github.com/gloaming-dusk/shady) (its sky
+plugin, `afterglow`, ships with it) and
+[shady-shell](https://github.com/gloaming-dusk/shady-shell).
+
+On NixOS, add this flake's package to `programs.shady.rices` and set
+`programs.shady.rice = "afterglow";`. Elsewhere, `./install.sh` links this
+checkout into `~/.local/share/shady/rices/afterglow`, and `SHADY_RICE=afterglow`
+picks it. [Horizon](https://github.com/gloaming-dusk/shady-rice-horizon) is
+built on it.
+
+To try it from a checkout, next to built `shady` and `shady-shell` checkouts
+(or with `SHADY_ROOT` and `SHADY_SHELL_BIN` pointing at them):
 
 ```sh
-nix develop
-./tools/build.sh
-./rices/afterglow/run.sh          # nested in a Wayland session
-./rices/afterglow/run-native.sh   # directly on a VT (DRM + libinput)
+./run.sh          # nested in a Wayland session
+./run-native.sh   # directly on a VT (DRM + libinput)
 ```
 
 Without arguments the launchers start `shady-shell` and a terminal (`$TERMINAL`,
 default `foot`). Pass `-s '<command>'` to start something else.
+
+### Login screen
+
+[`greeter/`](greeter) is an Afterglow login screen for
+[shady-greeter](https://github.com/gloaming-dusk/shady-greeter):
+`services.shady-greeter.theme = "afterglow";` with this package in
+`services.shady-greeter.themePackages`.
+
+### Tests
+
+`tests/headless-afterglow.sh` and `tests/headless-afterglow-shell.sh` run the
+rice on a headless output against the Shady checkout (`SHADY_ROOT`, with an
+ASan build in `build-spatial-asan` or `SHADY_SPATIAL_TEST_BUILD_DIR`).
 
 ## Controls
 
@@ -43,8 +67,8 @@ default `foot`). Pass `-s '<command>'` to start something else.
 
 ## What it is made of
 
-- **`afterglow` native plugin** (`plugins/afterglow.c`). It renders
-  `shaders/afterglow_sky.frag` in the `AFTER_BACKGROUND` render hook. Every pixel
+- **`afterglow` native plugin** (Shady's [`plugins/afterglow.c`](https://github.com/gloaming-dusk/shady/blob/main/plugins/afterglow.c)). It renders
+  `plugins/shaders/afterglow_sky.frag` in the `AFTER_BACKGROUND` render hook. Every pixel
   is a world-space view ray from the host camera, so the horizon, sun and sea stay
   fixed in the world while you orbit:
   - a three-stop twilight gradient with a sun-side horizon belt and a faint rose

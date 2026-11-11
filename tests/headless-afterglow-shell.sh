@@ -3,10 +3,11 @@
 # palette, the rice's shell.lua reads them, and an hour change (Super+T)
 # cross-fades the bar along with the sky.
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+source "$(dirname "$0")/../env.sh"
 cd "$ROOT"
+export AFTERGLOW_DIR="$RICE"
 BUILD_DIR="${SHADY_SPATIAL_TEST_BUILD_DIR:-build-spatial-asan}"
-for bin in shady shady-shell shadyctl libshady-plugin-afterglow.so libshady-plugin-fps-folded-paper.so \
+for bin in shady shadyctl libshady-plugin-afterglow.so libshady-plugin-fps-folded-paper.so \
         libshady-plugin-spatial-overview.so; do
     [[ -e "$BUILD_DIR/$bin" ]] || { echo "afterglow-shell: missing $BUILD_DIR/$bin" >&2; exit 2; }
 done
@@ -22,18 +23,17 @@ log="$tmp/log"
     unset WAYLAND_DISPLAY WAYLAND_SOCKET SHADY_SOCKET SHADY_SHELL_CONFIG
     export WLR_BACKENDS=headless WLR_HEADLESS_OUTPUTS=1 WLR_RENDERER=gles2 LIBGL_ALWAYS_SOFTWARE=1
     export SHADY_ROOT="$ROOT"
-    export SHADY_LUA_INIT="$ROOT/tests/headless-afterglow-shell-init.lua"
+    export SHADY_LUA_INIT="$RICE/tests/headless-afterglow-shell-init.lua"
     export SHADY_AFTERGLOW_PLUGIN="$ROOT/$BUILD_DIR/libshady-plugin-afterglow.so"
     export SHADY_FPS_REPRESENTATION_PLUGIN="$ROOT/$BUILD_DIR/libshady-plugin-fps-folded-paper.so"
     export SHADY_OVERVIEW_PLUGIN="$ROOT/$BUILD_DIR/libshady-plugin-spatial-overview.so"
-    export SHADY_SHELL_BIN="$ROOT/$BUILD_DIR/shady-shell"
-    export AFTERGLOW_STATUS="$status"
+        export AFTERGLOW_STATUS="$status"
     # What run.sh does for the shell.
-    source "$ROOT/rices/afterglow/theme.sh"
-    export SHADY_SHELL_CONFIG="$ROOT/rices/afterglow/shell.lua"
+    source "$RICE/theme.sh"
+    export SHADY_SHELL_CONFIG="$RICE/shell.lua"
     export ASAN_OPTIONS="${ASAN_OPTIONS:-abort_on_error=1:halt_on_error=1:detect_leaks=0}"
     export UBSAN_OPTIONS="${UBSAN_OPTIONS:-halt_on_error=1:print_stacktrace=1}"
-    exec "$BUILD_DIR/shady" -c "$ROOT/rices/afterglow/config.lua"
+    exec "$BUILD_DIR/shady" -c "$RICE/config.lua"
 ) >"$log" 2>&1 &
 comp=$!
 cleanup() { kill "$comp" 2>/dev/null || true; wait "$comp" 2>/dev/null || true; rm -rf "$tmp"; }

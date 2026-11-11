@@ -4,14 +4,13 @@
 #   phases.jpg    the four hours, 2x2
 #   hero.mp4/webm/jpg  the 17.1 s website loop and its poster
 #
-# Needs a build in build/ and a GPU. Run from the repository root:
-#   nix develop -c bash rices/afterglow/capture.sh
+# Needs a GPU, a Shady build in $SHADY_ROOT/build (env.sh) and shady-shell:
+#   nix develop ../shady -c ./capture.sh
 # grim, foot, wf-recorder, ImageMagick and ffmpeg come from nixpkgs.
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+source "$(dirname "$0")/env.sh"
 cd "$ROOT"
-RICE="$ROOT/rices/afterglow"
-for bin in shady shady-shell libshady-plugin-afterglow.so; do
+for bin in shady libshady-plugin-afterglow.so; do
     [[ -e "build/$bin" ]] || { echo "capture: build/$bin is missing; run ./tools/build.sh" >&2; exit 1; }
 done
 
@@ -29,9 +28,8 @@ run() {
         unset WAYLAND_DISPLAY WAYLAND_SOCKET SHADY_SOCKET
         export WLR_BACKENDS=headless WLR_HEADLESS_OUTPUTS=1 WLR_RENDERER=gles2
         export SHADY_ROOT="$ROOT" SHADY_AFTERGLOW_PHASE="golden hour"
-        export SHADY_LUA_INIT="$RICE/capture/init.lua"
-        export SHADY_SHELL_BIN="$ROOT/build/shady-shell"
-        export CAPTURE_MODE="$mode" CAPTURE_OUT="$work" CAPTURE_STATUS="$work/status"
+        export SHADY_LUA_INIT="$RICE/capture/init.lua" AFTERGLOW_DIR="$RICE"
+                export CAPTURE_MODE="$mode" CAPTURE_OUT="$work" CAPTURE_STATUS="$work/status"
         export CAPTURE_FOOT_INI="$RICE/capture/foot.ini"
         source "$RICE/theme.sh"
         export SHADY_SHELL_CONFIG="$RICE/shell.lua"

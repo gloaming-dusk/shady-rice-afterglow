@@ -2,7 +2,7 @@
 -- shell, three terminals, then either stills (one per hour) or the hero
 -- loop (hour changes timed to the website's chips).
 local root = assert(os.getenv("SHADY_ROOT"))
-dofile(root .. "/rices/afterglow/init.lua")
+dofile(assert(os.getenv("AFTERGLOW_DIR")) .. "/init.lua")
 
 local mode = assert(os.getenv("CAPTURE_MODE"))
 local out = assert(os.getenv("CAPTURE_OUT"))

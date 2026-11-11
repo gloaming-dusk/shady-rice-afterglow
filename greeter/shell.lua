@@ -6,7 +6,7 @@
 -- session, Escape clears what was typed.
 
 -- Afterglow's live palette, with theme.sh's colours until it arrives
--- (as in rices/afterglow/shell.lua).
+-- (as in ../shell.lua).
 local base = shell.theme
 local live = {}
 for _, name in ipairs({ "accent", "accent_2", "accent_deep", "surface", "text", "text_dim" }) do

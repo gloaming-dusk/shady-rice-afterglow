@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+source "$(dirname "$0")/../env.sh"
 cd "$ROOT"
+export AFTERGLOW_DIR="$RICE"
 
 BUILD_DIR="${SHADY_SPATIAL_TEST_BUILD_DIR:-build}"
 COMPOSITOR="$BUILD_DIR/shady"
@@ -20,7 +21,7 @@ log="$tmp/compositor.log"
 export XDG_RUNTIME_DIR="$tmp/runtime"
 export WLR_BACKENDS=headless WLR_HEADLESS_OUTPUTS=1 WLR_RENDERER=gles2 LIBGL_ALWAYS_SOFTWARE=1
 export SHADY_ROOT="$ROOT"
-export SHADY_LUA_INIT="$ROOT/tests/headless-afterglow.lua"
+export SHADY_LUA_INIT="$RICE/tests/headless-afterglow.lua"
 export SHADY_AUTOMATION_PROBE="$ROOT/$PROBE"
 export SHADY_AFTERGLOW_PLUGIN="$ROOT/$BUILD_DIR/libshady-plugin-afterglow.so"
 export SHADY_FPS_REPRESENTATION_PLUGIN="$ROOT/$BUILD_DIR/libshady-plugin-fps-folded-paper.so"
@@ -29,7 +30,7 @@ export ASAN_OPTIONS="${ASAN_OPTIONS:-abort_on_error=1:halt_on_error=1:detect_lea
 export UBSAN_OPTIONS="${UBSAN_OPTIONS:-halt_on_error=1:print_stacktrace=1}"
 
 set +e
-timeout 25s "$COMPOSITOR" -c "$ROOT/rices/afterglow/config.lua" >"$log" 2>&1
+timeout 25s "$COMPOSITOR" -c "$RICE/config.lua" >"$log" 2>&1
 rc=$?
 set -e
 
